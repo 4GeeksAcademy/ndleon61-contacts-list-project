@@ -2,6 +2,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGlobalReducer } from '../store/Context';
+import '../styles/ContactList.css';
 
 const ContactList = () => {
     
@@ -79,20 +80,32 @@ const ContactList = () => {
         
 
   return (
-    <div>
+    <div className='page'>
         <div className="navbar">
-             <h1>Contact List</h1>
+             <h1 className='title'>Contact List</h1>
             <button className='btn btn-primary' onClick={() => navigate("/add")}>Add Contact</button>
         </div>
-        <div className="container">
+        <div className="container list-container">
             {store.contacts.length === 0 ? (
                 <p>No contacts found.</p>
             ) : (
                 <ul>
                 {store.contacts.map((contact) => (
                     <li key={contact.id}>
-                    {contact.name} – {contact.email} - {contact.phone} - {contact.address}
-                    <button className='btn btn-danger ms-2' onClick={() => handleDelete(contact.id)}>Delete</button>
+                        <div className="contact-container">
+                            <div className='contact-image'>
+                            <img src="https://cdn3.vectorstock.com/i/1000x1000/61/97/black-contact-person-icon-on-white-background-vector-31046197.jpg" alt="" />
+                        </div>
+                        <div className='contact-information'>
+                            <span>{contact.name}</span> 
+                            <span>{contact.email}</span>
+                            <span>{contact.phone}</span>
+                            <span>{contact.address}</span>
+                        </div>
+                        
+                        </div>  
+                        <button className='btn btn-danger ms-2 mb-3' onClick={() => handleDelete(contact.id)}>Delete</button>
+                   
                     </li>
                 ))}
                 </ul>

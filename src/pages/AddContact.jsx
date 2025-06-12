@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useGlobalReducer } from '../store/Context';
+import '../styles/AddContact.css';
 
 const AddContact = () => {
   const { dispatch } = useGlobalReducer();
