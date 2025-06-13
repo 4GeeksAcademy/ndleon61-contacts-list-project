@@ -1,0 +1,19 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    width: 40rem;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    border: 0.5px solid white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px white;
+}
+
+.form-container input {
+    border: none;
+    border-bottom: 0.5px solid white;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: transparent; 
+}

@@ -85,29 +85,33 @@ const ContactList = () => {
              <h1 className='title'>Contact List</h1>
             <button className='btn btn-primary' onClick={() => navigate("/add")}>Add Contact</button>
         </div>
-        <div className="container list-container">
+       
+        <div>
             {store.contacts.length === 0 ? (
                 <p>No contacts found.</p>
             ) : (
-                <ul>
+                <ul >
                 {store.contacts.map((contact) => (
-                    <li key={contact.id}>
+                    <li key={contact.id} className="container list-container">
                         <div className="contact-container">
                             <div className='contact-image'>
-                            <img src="https://cdn3.vectorstock.com/i/1000x1000/61/97/black-contact-person-icon-on-white-background-vector-31046197.jpg" alt="" />
-                        </div>
-                        <div className='contact-information'>
-                            <span>{contact.name}</span> 
-                            <span>{contact.email}</span>
-                            <span>{contact.phone}</span>
-                            <span>{contact.address}</span>
-                        </div>
-                        
+                            <i className="fa-solid fa-circle-user"></i>
+                            </div>
+                            <div className='contact-information'>
+                                <span id = "fullName" >{contact.name}</span> 
+                                <span>{contact.email}</span>
+                                <span>{contact.phone}</span>
+                                <span>{contact.address}</span>
+                            </div>
+                            <div className="buttons">
+                                <button className='btn btn-danger ms-2 mb-3' onClick={() => handleDelete(contact.id)}>Delete</button>
+                                <button className= "btn btn-warning ms-2" >Edit</button>
+                            </div>
                         </div>  
-                        <button className='btn btn-danger ms-2 mb-3' onClick={() => handleDelete(contact.id)}>Delete</button>
+                       
                    
                     </li>
-                ))}
+                 ))}
                 </ul>
             )}
         </div>

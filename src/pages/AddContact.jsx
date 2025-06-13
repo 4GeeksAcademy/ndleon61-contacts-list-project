@@ -50,12 +50,12 @@ const AddContact = () => {
 
 
   return (
-    <div className='container'>
+    <div>
         <div className="navbar">
             <h1>Add New Contact</h1>
             <button className='btn btn-danger' onClick={() => navigate("/")}>Cancel</button>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className = "container form-container">
             <input 
             type="text"
             name='name'
@@ -91,7 +91,7 @@ const AddContact = () => {
             onChange={handleChange}
             
             />
-            <button type='submit'>Add</button>
+            <button type='submit'className = "btn btn-primary" >Add</button>
         </form>
 
     </div>
