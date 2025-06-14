@@ -13,7 +13,8 @@ const AddContact = () => {
     name: "",
     phone: "",
     email: "",
-    address: ""
+    address: "",
+    agenda: slug
   });
 
   const handleChange = (e) => {
@@ -25,77 +26,67 @@ const AddContact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const res = await fetch(`https://playground.4geeks.com/contact/agendas/${slug}/contacts`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(form)
       });
 
       if (!res.ok) throw new Error("Failed to create contact");
 
-      const newContact = await res.json();
-      dispatch({ type: 'ADD_CONTACT', payload: newContact });
-
+      dispatch({ type: "ADD_CONTACT" });
       alert("Contact added successfully!");
       navigate("/");
+
     } catch (error) {
       console.error("Error:", error);
-      alert("Error creating contact.");
+      alert("An error occurred.");
     }
   };
 
-
-
   return (
     <div>
-        <div className="navbar">
-            <h1>Add New Contact</h1>
-            <button className='btn btn-danger' onClick={() => navigate("/")}>Cancel</button>
-        </div>
-        <form onSubmit={handleSubmit} className = "container form-container">
-            <input 
-            type="text"
-            name='name'
-            placeholder='Full name'
-            value={form.name}
-            onChange={handleChange}
-            
-            />
-
-            <input 
-            type="text"
-            name='phone'
-            placeholder='Phone number'
-            value={form.phone}
-            onChange={handleChange}
-            
-            />
-
-            <input 
-            type="text"
-            name='email'
-            placeholder='Email'
-            value={form.email}
-            onChange={handleChange}
-            
-            />
-
-            <input 
-            type="text"
-            name='address'
-            placeholder='Address'
-            value={form.address}
-            onChange={handleChange}
-            
-            />
-            <button type='submit'className = "btn btn-primary" >Add</button>
-        </form>
-
+      <div className="navbar">
+        <h1><i class="fa-solid fa-user"></i> Add New Contact</h1>
+        <button className='btn btn-danger' onClick={() => navigate("/")}>Cancel</button>
+      </div>
+      <form onSubmit={handleSubmit} className="container form-container">
+        <input
+          type="text"
+          name='name'
+          placeholder='Full name'
+          value={form.name}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name='phone'
+          placeholder='Phone number'
+          value={form.phone}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name='email'
+          placeholder='Email'
+          value={form.email}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name='address'
+          placeholder='Address'
+          value={form.address}
+          onChange={handleChange}
+        />
+        <button type='submit' className="btn btn-primary">Add</button>
+      </form>
     </div>
-  )
+  );
 };
 
 export default AddContact;

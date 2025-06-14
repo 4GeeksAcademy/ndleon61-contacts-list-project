@@ -1,123 +1,66 @@
-import React from 'react';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGlobalReducer } from '../store/Context';
+import ContactCard from '../components/ContactCard';
 import '../styles/ContactList.css';
 
 const ContactList = () => {
-    
-    const navigate = useNavigate();
-    const { store, dispatch } = useGlobalReducer();
-    const slug = "david_leon01"
+  const navigate = useNavigate();
+  const { store, dispatch } = useGlobalReducer();
+  const slug = "david_leon01";
 
-   const ensureAgendaExists = async () => {
-        try {
-            const check = await fetch(`https://playground.4geeks.com/contact/agendas/${slug}`);
-            if (check.ok) {
-            console.log("Agenda already exists");
-            return;
-            }
+  const ensureAgendaExists = async () => {
+    try {
+      const res = await fetch(`https://playground.4geeks.com/contact/agendas/${slug}`);
+      if (!res.ok) {
+        await fetch(`https://playground.4geeks.com/contact/agendas/${slug}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({})
+        });
+      }
+    } catch (error) {
+      console.error("Agenda check failed", error);
+    }
+  };
 
-        
-            const res = await fetch(`https://playground.4geeks.com/contact/agendas/${slug}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({}) 
-            });
+  const loadContacts = async () => {
+    try {
+      const res = await fetch(`https://playground.4geeks.com/contact/agendas/${slug}/contacts`);
+      const data = await res.json();
+      dispatch({ type: 'SET_CONTACTS', payload: Array.isArray(data.contacts) ? data.contacts : [] });
+    } catch (error) {
+      console.error("Error loading contacts:", error);
+    }
+  };
 
-            if (!res.ok) throw new Error("Failed to create agenda");
-
-            const data = await res.json();
-            console.log("Agenda created:", data);
-        } catch (error) {
-            console.error("Error ensuring agenda exists:", error);
-        }
+  useEffect(() => {
+    const init = async () => {
+      await ensureAgendaExists();
+      await loadContacts();
     };
-
-        const loadContacts = async () => {
-            try {
-                const res = await fetch(`https://playground.4geeks.com/contact/agendas/${slug}/contacts`);
-                if (!res.ok) throw new Error("Failed to load contacts");
-
-                const data = await res.json();
-                console.log("✅ Contacts from API:", data);
-                dispatch ({type: 'SET_CONTACTS', payload: Array.isArray(data.contacts) ? data.contacts: [] });
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        //This function is for deleting contacts
-
-       const handleDelete = async (id) => {
-            const confirm = window.confirm("Are you sure you want to delete this contact?");
-            if (!confirm) return;
-
-            try {
-                const res = await fetch(`https://playground.4geeks.com/contact/agendas/${slug}/contacts/${id}`, {
-                method: "DELETE"
-                });
-
-                if (!res.ok) throw new Error("Failed to delete contact");
-
-                dispatch({ type: "DELETE_CONTACT", payload: id });
-
-            } catch (error) {
-                console.error("Error deleting contact", error);
-                alert("Failed to delete contact.");
-            }
-        };
-
-        useEffect(() => {
-            const init = async () => {
-                await ensureAgendaExists(); 
-                await loadContacts();      
-            };
-        init();
-        }, [dispatch, store.updated]);
-        
+    init();
+  }, [dispatch, store.updated]);
 
   return (
     <div className='page'>
-        <div className="navbar">
-             <h1 className='title'>Contact List</h1>
-            <button className='btn btn-primary' onClick={() => navigate("/add")}>Add Contact</button>
-        </div>
-       
-        <div>
-            {store.contacts.length === 0 ? (
-                <p>No contacts found.</p>
-            ) : (
-                <ul >
-                {store.contacts.map((contact) => (
-                    <li key={contact.id} className="container list-container">
-                        <div className="contact-container">
-                            <div className='contact-image'>
-                            <i className="fa-solid fa-circle-user"></i>
-                            </div>
-                            <div className='contact-information'>
-                                <span id = "fullName" >{contact.name}</span> 
-                                <span>{contact.email}</span>
-                                <span>{contact.phone}</span>
-                                <span>{contact.address}</span>
-                            </div>
-                            <div className="buttons">
-                                <button className='btn btn-danger ms-2 mb-3' onClick={() => handleDelete(contact.id)}>Delete</button>
-                                <button className= "btn btn-warning ms-2" >Edit</button>
-                            </div>
-                        </div>  
-                       
-                   
-                    </li>
-                 ))}
-                </ul>
-            )}
-        </div>
-        
+      <div className="navbar">
+        <h1 className='title'><i className="fa-solid fa-address-book"></i> Contact List</h1>
+        <button className='btn btn-primary' onClick={() => navigate("/add")}>Add Contact</button>
+      </div>
+      <div>
+        {store.contacts.length === 0 ? (
+          <p>No contacts found.</p>
+        ) : (
+          <ul>
+            {store.contacts.map(contact => (
+              <ContactCard key={contact.id} contact={contact} />
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
-  )
+  );
 };
 
 export default ContactList;

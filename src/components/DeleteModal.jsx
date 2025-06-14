@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGlobalReducer } from '../store/Context';
 
+
 const ContactCard = ({ contact }) => {
   const navigate = useNavigate();
   const { dispatch } = useGlobalReducer();
@@ -13,7 +14,9 @@ const ContactCard = ({ contact }) => {
       const res = await fetch(`https://playground.4geeks.com/contact/agendas/${slug}/contacts/${contact.id}`, {
         method: "DELETE"
       });
+
       if (!res.ok) throw new Error("Failed to delete contact");
+
       dispatch({ type: "DELETE_CONTACT", payload: contact.id });
     } catch (err) {
       alert("Error deleting contact.");
@@ -42,22 +45,19 @@ const ContactCard = ({ contact }) => {
         </div>
       </li>
 
-      {/* Modal */}
       {show && (
-        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Confirm Deletion</h5>
-                <button type="button" className="btn-close" onClick={() => setShow(false)}></button>
-              </div>
-              <div className="modal-body">
-                <p>Are you sure you want to delete <strong>{contact.name}</strong>?</p>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShow(false)}>Cancel</button>
-                <button type="button" className="btn btn-danger" onClick={handleDelete}>Delete</button>
-              </div>
+        <div className="modal-backdrop-custom">
+          <div className="modal-content-custom">
+            <div className="modal-header-custom">
+              <h5 className="modal-title-custom">Confirm Deletion</h5>
+              <button onClick={() => setShow(false)} style={{ background: 'none', border: 'none', color: 'white', fontSize: '1.2rem' }}>×</button>
+            </div>
+            <div className="modal-body">
+              Are you sure you want to delete <strong>{contact.name}</strong>?
+            </div>
+            <div className="modal-footer-custom">
+              <button className="btn btn-secondary" onClick={() => setShow(false)}>Cancel</button>
+              <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
             </div>
           </div>
         </div>
